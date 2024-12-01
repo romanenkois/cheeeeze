@@ -1,0 +1,29 @@
+.wrapper {
+    table {
+        tr {
+            td {
+                width: var(--field-size);
+                height: var(--field-size);
+                max-width: var(--field-size);
+                max-height: var(--field-size);
+                background-color: var(--gray-color);
+                overflow: hidden;
+                box-sizing: border-box;
+
+                .field {
+                    width: var(--field-size);
+                    height: var(--field-size);
+                    max-width: var(--field-size);
+                    max-height: var(--field-size);
+                    background-color: var(--gray-color);
+                    overflow: hidden;
+                    box-sizing: border-box;
+                }
+
+                .active-field {
+                    background-color: var(--accent-color);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+<div class="wrapper" (click)="this.fieldSelected()">
+    <div class="picture" *ngIf="this.field().piece != 'empty'">
+        <!-- <p>
+            {{ this.position()[0] }}
+            {{ this.position()[1] }}
+        </p> -->
+        <img
+            [src]="this.piecePicture()"
+            [alt]="
+                this.field().piece != 'empty'
+                    ? this.field().piece + ' ' + this.field().faction
+                    : ''
+            "
+        />
+    </div>
+</div>

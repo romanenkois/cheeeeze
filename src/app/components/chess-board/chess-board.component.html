@@ -1,0 +1,25 @@
+<div class="wrapper">
+    <table>
+        @for (row of this.chessBoard(); track $index; let rowIndex = $index) {
+        <tr>
+            @for (field of row; track $index; let columnIndex = $index) {
+            <td>
+                <div
+                    class="field"
+                    [class.active-field]="
+                        (this.firstPosition && rowIndex == this.firstPosition[0]) &&
+                        (this.firstPosition && columnIndex == this.firstPosition[1])
+                    "
+                >
+                    <app-chess-field
+                        [position]="[rowIndex, columnIndex]"
+                        [field]="field"
+                        (fieldSelectedEvent)="movePiece($event)"
+                    ></app-chess-field>
+                </div>
+            </td>
+            }
+        </tr>
+        }
+    </table>
+</div>
