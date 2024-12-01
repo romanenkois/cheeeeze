@@ -1,13 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-    --field-size: 100px;
-
     --black-color: #02090a;
     --gray-color: #d3d3d3;
     --white-color: #f3f3f3;
 
     --primary-color: #3affbd;
     --accent-color: #3affbd;
+
+    --quick-transition: 0.1s ease-in-out;
+    --standart-transition: 0.3s ease-in-out;
 }
 
 p {

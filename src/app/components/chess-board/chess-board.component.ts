@@ -1,5 +1,5 @@
 import { Component, inject, input, InputSignal } from '@angular/core';
-import { ChessFieldComponent } from "../chess-field/chess-field.component";
+import { ChessFieldComponent } from '../chess-field/chess-field.component';
 import { CommonModule } from '@angular/common';
 import { MainService } from '../../service/main.service';
 
@@ -8,10 +8,9 @@ import { MainService } from '../../service/main.service';
   standalone: true,
   imports: [CommonModule, ChessFieldComponent],
   templateUrl: './chess-board.component.html',
-  styleUrl: './chess-board.component.scss'
+  styleUrl: './chess-board.component.scss',
 })
 export class ChessBoardComponent {
-[x: string]: any;
   mainService: MainService = inject(MainService);
 
   chessBoard: InputSignal<any> = input.required();
@@ -21,15 +20,21 @@ export class ChessBoardComponent {
 
   movePiece(coordinates: [number, number]) {
     if (this.firstPosition) {
+      if (coordinates == this.firstPosition) {
+        this.firstPosition = undefined;
+        return;
+      }
       this.secondPosition = coordinates;
+      // console.log('2', this.firstPosition, this.secondPosition);
+
       this.mainService.movePiece(this.firstPosition, this.secondPosition);
       this.firstPosition = undefined;
       this.secondPosition = undefined;
-      console.log(this.firstPosition, this.secondPosition);
     } else {
-      this.firstPosition = coordinates;
-      console.log(this.firstPosition, this.secondPosition);
+      if (this.mainService.checkIfTherePiece(coordinates)) {
+        this.firstPosition = coordinates;
+        // console.log('1', this.firstPosition, this.secondPosition);
+      }
     }
   }
-
 }

@@ -1,25 +1,40 @@
 .wrapper {
+    $field-size: 70px;
+
     table {
         tr {
             td {
-                width: var(--field-size);
-                height: var(--field-size);
-                max-width: var(--field-size);
-                max-height: var(--field-size);
+                width: $field-size;
+                height: $field-size;
+                max-width: $field-size;
+                max-height: $field-size;
                 background-color: var(--gray-color);
                 overflow: hidden;
                 box-sizing: border-box;
 
                 .field {
-                    width: var(--field-size);
-                    height: var(--field-size);
-                    max-width: var(--field-size);
-                    max-height: var(--field-size);
-                    background-color: var(--gray-color);
+                    width: $field-size;
+                    height: $field-size;
+                    max-width: $field-size;
+                    max-height: $field-size;
+
                     overflow: hidden;
                     box-sizing: border-box;
+
+                    transition: var(--quick-transition);
+                    background-color: var(--white-color);
                 }
 
+                .active-field {
+                    background-color: var(--accent-color);
+                }
+            }
+        }
+        tr:nth-child(even) {
+            td {
+                .field {
+                    background-color: var(--gray-color);
+                }
                 .active-field {
                     background-color: var(--accent-color);
                 }
