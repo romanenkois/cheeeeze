@@ -116,7 +116,7 @@ export const chessBoardTesting: ChessBoard = [
   ],
   [
     { piece: 'empty', faction: 'neutral' },
-    { piece: 'empty', faction: 'neutral' },
+    { piece: 'Bishop', faction: 'white' },
     { piece: 'Rook', faction: 'white' },
     { piece: 'empty', faction: 'neutral' },
     { piece: 'empty', faction: 'neutral' },

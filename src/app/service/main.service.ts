@@ -17,7 +17,10 @@ export class MainService {
   checkIfTherePiece(coordinates: [number, number]): boolean {
     let chessBoard = this.getChessBoard();
 
-    if (chessBoard[coordinates[0]][coordinates[1]].piece != 'empty') {
+    if (
+      chessBoard[coordinates[0]][coordinates[1]].piece &&
+      chessBoard[coordinates[0]][coordinates[1]].piece != 'empty'
+    ) {
       return true;
     }
     return false;
@@ -79,26 +82,142 @@ export class MainService {
       }
     }
 
-    console.log(posibleMovesCoordinates);
+    // console.log(posibleMovesCoordinates);
     return posibleMovesCoordinates;
   }
 
-  getPieceAllValidMoves() {}
+  getPieceAllValidMoves(
+    from: [number, number],
+    piece: chessField
+  ): Array<[number, number]> {
+    let posibleMovesCoordinates: Array<[number, number]> = [];
+    let posibleMovesPatterns = {
+      straight: false,
+      diagonaly: false,
+    };
+
+    let XLenth = 8;
+    let YLenth = 8;
+
+    if (piece.piece == 'Rook') {
+      posibleMovesPatterns.straight = true;
+    }
+    if (piece.piece == 'Bishop') {
+      posibleMovesPatterns.diagonaly = true;
+    }
+    if (piece.piece == 'Queen') {
+      posibleMovesPatterns.straight = true;
+      posibleMovesPatterns.diagonaly = true;
+    }
+
+    if (posibleMovesPatterns.straight) {
+      // to the top of piece
+      if (from[0] > 0) {
+        for (let i = from[0] - 1; i > -1; i--) {
+          if (this.checkIfTherePiece([i, from[1]])) {
+            break;
+          }
+          posibleMovesCoordinates.push([i, from[1]]);
+        }
+      }
+      // to the right of piece
+      if (from[1] + 1 < XLenth) {
+        for (let i = from[1] + 1; i < XLenth; i++) {
+          if (this.checkIfTherePiece([from[0], i])) {
+            break;
+          }
+          posibleMovesCoordinates.push([from[0], i]);
+        }
+      }
+      // to the bottom of piece
+      if (from[0] + 1 < YLenth) {
+        for (let i = from[0] + 1; i < YLenth; i++) {
+          if (this.checkIfTherePiece([i, from[1]])) {
+            break;
+          }
+          posibleMovesCoordinates.push([i, from[1]]);
+        }
+      }
+      // to the right of piece
+      if (from[1] > 0) {
+        for (let i = from[1] - 1; i > -1; i--) {
+          if (this.checkIfTherePiece([from[0], i])) {
+            break;
+          }
+          posibleMovesCoordinates.push([from[0], i]);
+        }
+      }
+    }
+    if (posibleMovesPatterns.diagonaly) {
+      // to the top right diagonal
+      if (from[0] > -1 && from[1] + 1 < XLenth) {
+        let startingPoint: [number, number] = [from[0] - 1, from[1] + 1];
+        while (
+          startingPoint[0] > -1 &&
+          startingPoint[1] < XLenth &&
+          !this.checkIfTherePiece(startingPoint)
+        ) {
+          posibleMovesCoordinates.push([startingPoint[0], startingPoint[1]]);
+          startingPoint[0] -= 1;
+          startingPoint[1] += 1;
+        }
+      }
+      // to the bottom right diagonal
+      if (from[0] + 1 < YLenth && from[1] + 1 < XLenth) {
+        let startingPoint: [number, number] = [from[0] + 1, from[1] + 1];
+        while (
+          startingPoint[0] < YLenth &&
+          startingPoint[1] < XLenth &&
+          !this.checkIfTherePiece(startingPoint)
+        ) {
+          posibleMovesCoordinates.push([startingPoint[0], startingPoint[1]]);
+          startingPoint[0] += 1;
+          startingPoint[1] += 1;
+        }
+      }
+      // to the bottom left diagonal
+      if (from[0] + 1 < YLenth && from[1] > -1) {
+        let startingPoint: [number, number] = [from[0] + 1, from[1] - 1];
+        console.log(startingPoint);
+        while (
+          startingPoint[0] < YLenth &&
+          startingPoint[1] > -1 &&
+          !this.checkIfTherePiece(startingPoint)
+        ) {
+          posibleMovesCoordinates.push([startingPoint[0], startingPoint[1]]);
+          startingPoint[0] += 1;
+          startingPoint[1] -= 1;
+        }
+      }
+      // to the top left diagonal
+      if (from[0] - 1 > -1 && from[1] - 1 > -1) {
+        let startingPoint: [number, number] = [from[0] - 1, from[1] -1]
+        while (
+          startingPoint[0] > -1 &&
+          startingPoint[1] > -1 &&
+          !this.checkIfTherePiece(startingPoint)
+        ) {
+          posibleMovesCoordinates.push([startingPoint[0], startingPoint[1]])
+          startingPoint[0] -= 1;
+          startingPoint[1] -= 1;
+        }
+      }
+    }
+
+    // console.log(posibleMovesCoordinates);
+    return posibleMovesCoordinates;
+  }
 
   validatePieceMove(from: [number, number], to: [number, number]): boolean {
     let chessBoard = this.getChessBoard();
-
-    let posibleMoves = this.getPieceAllPosibleMoves(
+    let posibleMoves = this.getPieceAllValidMoves(
       from,
-      chessBoard[from[0]][from[1]] // piece object
+      chessBoard[from[0]][from[1]]
     );
+    console.log(111, posibleMoves);
     let isValidMove = posibleMoves.find((move: [number, number]) => {
       return move[0] == to[0] && move[1] == to[1];
     });
-    // console.log('pm', posibleMoves);
-    // console.log('to', to);
-
-    // console.log('is', isValidMove);
 
     return isValidMove ? true : false; //couse could be undefined lmaooooo
   }
