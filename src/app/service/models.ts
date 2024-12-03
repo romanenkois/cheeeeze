@@ -7,6 +7,23 @@ export type chessPiece =
   | 'Queen'
   | 'King';
 
+export type movesPatterns = {
+  straight?: boolean,
+  diagonaly?: boolean,
+  twoForward?: boolean,
+  oneForward?: boolean,
+  LShape?: boolean,
+  oneTileSquare?: boolean,
+}
+
+export type attackPatterns = {
+  straight?: boolean,
+  diagonaly?: boolean,
+  oneTileDiagonalForward?: boolean,
+  LShape?: boolean,
+  oneTileSquare?: boolean,
+}
+
 export type chessFaction = 'white' | 'black' | 'neutral';
 
 export type chessField = {
