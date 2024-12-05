@@ -19,6 +19,9 @@ export class MainService {
   public getChessBoard() {
     return this.$chessBoard();
   }
+  public getCellOnChessBoard(coordinates: [number, number])  {
+    return this.$chessBoard()[coordinates[0]][coordinates[1]]
+  }
 
   checkIfTherePiece(coordinates: [number, number]): boolean {
     let chessBoard = this.getChessBoard();
@@ -31,66 +34,6 @@ export class MainService {
     }
     return false;
   }
-
-  // getPieceAllPosibleMoves(
-  //   staringPosition: [number, number],
-  //   piece: chessField
-  // ): Array<[number, number]> {
-  //   let posibleMovesCoordinates: Array<[number, number]> = [];
-  //   let posibleMovesPatterns = {
-  //     straight: false,
-  //     diagonaly: false,
-  //   };
-
-  //   let XLenth = 8;
-  //   let YLenth = 8;
-
-  //   if (piece.piece == 'Rook') {
-  //     posibleMovesPatterns.straight = true;
-  //   }
-  //   if (piece.piece == 'Bishop') {
-  //     posibleMovesPatterns.diagonaly = true;
-  //   }
-  //   if (piece.piece == 'Queen') {
-  //     posibleMovesPatterns.straight = true;
-  //     posibleMovesPatterns.diagonaly = true;
-  //   }
-
-  //   if (posibleMovesPatterns.straight) {
-  //     for (let i = 0; i < YLenth; i++) {
-  //       posibleMovesCoordinates.push([i, staringPosition[1]]);
-  //     }
-  //     for (let i = 0; i < XLenth; i++) {
-  //       posibleMovesCoordinates.push([staringPosition[0], i]);
-  //     }
-  //   }
-  //   if (posibleMovesPatterns.diagonaly) {
-  //     let firstDiagonalPoint: [number, number] = [
-  //       staringPosition[0] - staringPosition[1],
-  //       0,
-  //     ];
-  //     let secondDiagonalPoint: [number, number] = [
-  //       0,
-  //       staringPosition[0] + staringPosition[1],
-  //     ];
-
-  //     console.log(firstDiagonalPoint, secondDiagonalPoint);
-
-  //     for (let i = 0; i < XLenth; i++) {
-  //       // check, so piece cannt noclip out of board
-  //       if (firstDiagonalPoint[0] + i < YLenth) {
-  //         posibleMovesCoordinates.push([firstDiagonalPoint[0] + i, i]);
-  //       }
-  //     }
-
-  //     for (let i = 0; i < XLenth; i++) {
-  //       posibleMovesCoordinates.push([i, secondDiagonalPoint[1] - i]);
-  //     }
-  //   }
-
-  //   // console.log(posibleMovesCoordinates);
-  //   return posibleMovesCoordinates;
-  // }
 
   /**
    * returns all possible moves, that would end with piece on earlier EMPTY square.

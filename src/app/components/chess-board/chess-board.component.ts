@@ -1,4 +1,4 @@
-import { Component, inject, input, InputSignal } from '@angular/core';
+import { Component, inject, input, InputSignal, signal, WritableSignal } from '@angular/core';
 import { ChessFieldComponent } from '../chess-field/chess-field.component';
 import { CommonModule } from '@angular/common';
 import { MainService } from '../../service/main.service';
@@ -14,6 +14,8 @@ export class ChessBoardComponent {
   mainService: MainService = inject(MainService);
 
   chessBoard: InputSignal<any> = input.required();
+
+  showIndexes: WritableSignal<boolean> = signal(false);
 
   firstPosition: [number, number] | undefined;
   secondPosition: [number, number] | undefined;

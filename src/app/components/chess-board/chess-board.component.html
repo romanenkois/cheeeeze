@@ -14,6 +14,8 @@
                     <app-chess-field
                         [position]="[rowIndex, columnIndex]"
                         [field]="field"
+                        [onFocus]="this.firstPosition && this.firstPosition[0] == rowIndex && this.firstPosition[1] == columnIndex ? true : false"
+                        [showIndex]="this.showIndexes()"
                         (fieldSelectedEvent)="movePiece($event)"
                     ></app-chess-field>
                 </div>

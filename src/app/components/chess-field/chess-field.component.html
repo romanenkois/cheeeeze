@@ -1,5 +1,11 @@
-<div class="wrapper" (click)="this.fieldSelected()">
-    <p>
+<div
+    class="wrapper"
+    (click)="this.fieldSelected()"
+    [class.white-cell]="this.fieldColor() == 'white'"
+    [class.black-cell]="this.fieldColor() == 'black'"
+    [class.on-focus]="this.onFocus()"
+>
+    <p *ngIf="this.showIndex()">
         {{ this.position()[0] }}
         {{ this.position()[1] }}
     </p>
