@@ -20,12 +20,39 @@ export class MainService {
   }
 
   public checkIfTherePiece(coordinates: [number, number]): boolean {
-    return this.moveValidator.checkIfTherePiece(coordinates, this.getChessBoard());
+    return this.moveValidator.checkIfTherePiece(
+      coordinates,
+      this.getChessBoard()
+    );
   }
-  // public getPiecePossibleMoves(coordinates: [number, number]): Array<[number, number]> {
-  //   return this.moveValidator.getPieceAllValidMoves(coordinates, this.getChessBoard()[coordinates[0]][coordinates[1]],  );
-  // }
+  public getPiecePossibleMoves(
+    coordinates: [number, number]
+  ): Array<[number, number]> {
+    let pieceMovePattern = this.moveValidator.getPieceMovePatterns(
+      this.getChessBoard()[coordinates[0]][coordinates[1]]
+    );
 
+    return this.moveValidator.getPieceAllValidMoves(
+      coordinates,
+      pieceMovePattern,
+      this.getChessBoard()
+    );
+  }
+
+  public getPiecePossibleAttacks(
+    coordinates: [number, number]
+  ): Array<[number, number]> {
+    let pieceMovePattern = this.moveValidator.getPieceMovePatterns(
+      this.getChessBoard()[coordinates[0]][coordinates[1]]
+    );
+
+    return this.moveValidator.getPieceAllValidAttacks(
+      coordinates,
+      pieceMovePattern,
+      false,
+      this.getChessBoard()
+    );
+  }
 
   validateMove(
     from: [number, number],

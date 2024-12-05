@@ -20,18 +20,17 @@ export class MoveValidators {
    * returns all possible moves, that would end with piece on earlier EMPTY square.
    * this doen not include squares with chess piece, of any faction
    * @param from coordinates on board
-   * @param piece chess piece object to move
    * @param posibleMovesPatterns object of possible moves
    * @param chessBoard chess board to check
    * @returns
    */
   getPieceAllValidMoves(
     from: [number, number],
-    piece: chessField,
     posibleMovesPatterns: movesPatterns,
     chessBoard: Array<Array<chessField>>
   ): Array<[number, number]> {
     let posibleMovesCoordinates: Array<[number, number]> = [];
+    let piece = chessBoard[from[0]][from[1]];
 
     let XLenth = chessBoard[0].length;
     let YLenth = chessBoard.length;
@@ -219,12 +218,12 @@ export class MoveValidators {
 
   getPieceAllValidAttacks(
     from: [number, number],
-    piece: chessField,
     attackPatterns: attackPatterns,
     allowSelfAttack: boolean,
     chessBoard: Array<Array<chessField>>
   ): Array<[number, number]> {
     let possibleAttacksCoordinates: Array<[number, number]> = [];
+    let piece = chessBoard[from[0]][from[1]];
 
     let XLenth = chessBoard[0].length;
     let YLenth = chessBoard.length;
@@ -462,52 +461,75 @@ export class MoveValidators {
     return possibleAttacksCoordinates;
   }
 
+  getPieceMovePatterns(piece: chessField) {
+    let pieceMovesPatterns: movesPatterns = {};
+
+    if (piece.piece == 'Rook') {
+      pieceMovesPatterns.straight = true;
+    }
+    if (piece.piece == 'Bishop') {
+      pieceMovesPatterns.diagonaly = true;
+    }
+    if (piece.piece == 'Queen') {
+      pieceMovesPatterns.straight = true;
+      pieceMovesPatterns.diagonaly = true;
+    }
+    if (piece.piece == 'Pawn') {
+      pieceMovesPatterns.oneForward = true;
+      pieceMovesPatterns.twoForward = true; // should be implemented better???
+    }
+    if (piece.piece == 'Knight') {
+      pieceMovesPatterns.LShape = true;
+    }
+    if (piece.piece == 'King') {
+      pieceMovesPatterns.oneTileSquare = true;
+    }
+
+    return pieceMovesPatterns;
+  }
+
+  getPieceAttackPatterns(piece: chessField) {
+    let pieceAttacksPatterns: attackPatterns = {};
+
+    if (piece.piece == 'Rook') {
+      pieceAttacksPatterns.straight = true;
+    }
+    if (piece.piece == 'Bishop') {
+      pieceAttacksPatterns.diagonaly = true;
+    }
+    if (piece.piece == 'Queen') {
+      pieceAttacksPatterns.straight = true;
+      pieceAttacksPatterns.diagonaly = true;
+    }
+    if (piece.piece == 'Pawn') {
+      pieceAttacksPatterns.oneTileDiagonalForward = true;
+    }
+    if (piece.piece == 'Knight') {
+      pieceAttacksPatterns.LShape = true;
+    }
+    if (piece.piece == 'King') {
+      pieceAttacksPatterns.oneTileSquare = true;
+    }
+
+    return pieceAttacksPatterns;
+  }
+
   validatePieceMove(
     from: [number, number],
     to: [number, number],
     chessBoard: Array<Array<chessField>>
   ): boolean {
     let piece = chessBoard[from[0]][from[1]];
-    let pieceMovesPatterns: movesPatterns = {};
-    let pieceAttacksPatterns: attackPatterns = {};
-
-    if (piece.piece == 'Rook') {
-      pieceMovesPatterns.straight = true;
-      pieceAttacksPatterns.straight = true;
-    }
-    if (piece.piece == 'Bishop') {
-      pieceMovesPatterns.diagonaly = true;
-      pieceAttacksPatterns.diagonaly = true;
-    }
-    if (piece.piece == 'Queen') {
-      pieceMovesPatterns.straight = true;
-      pieceMovesPatterns.diagonaly = true;
-      pieceAttacksPatterns.straight = true;
-      pieceAttacksPatterns.diagonaly = true;
-    }
-    if (piece.piece == 'Pawn') {
-      pieceMovesPatterns.oneForward = true;
-      pieceMovesPatterns.twoForward = true; // should be implemented better???
-      pieceAttacksPatterns.oneTileDiagonalForward = true;
-    }
-    if (piece.piece == 'Knight') {
-      pieceMovesPatterns.LShape = true;
-      pieceAttacksPatterns.LShape = true;
-    }
-    if (piece.piece == 'King') {
-      pieceMovesPatterns.oneTileSquare = true;
-      pieceAttacksPatterns.oneTileSquare = true;
-    }
+    let pieceMovesPatterns = this.getPieceMovePatterns(piece);
+    let pieceAttacksPatterns = this.getPieceAttackPatterns(piece);
 
     let posibleMoves = this.getPieceAllValidMoves(
       from,
-      piece,
       pieceMovesPatterns,
       chessBoard
     );
     let posibleAttacks = this.getPieceAllValidAttacks(
       from,
-      piece,
       pieceAttacksPatterns,
       false,
       chessBoard
