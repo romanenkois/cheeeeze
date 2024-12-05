@@ -19,8 +19,8 @@ export class MainService {
   public getChessBoard() {
     return this.$chessBoard();
   }
-  public getCellOnChessBoard(coordinates: [number, number])  {
-    return this.$chessBoard()[coordinates[0]][coordinates[1]]
+  public getCellOnChessBoard(coordinates: [number, number]) {
+    return this.$chessBoard()[coordinates[0]][coordinates[1]];
   }
 
   checkIfTherePiece(coordinates: [number, number]): boolean {
@@ -409,7 +409,10 @@ export class MainService {
           move[1] < XLenth &&
           this.checkIfTherePiece(move)
         ) {
-          if (this.getChessBoard()[move[0]][move[1]].faction != piece.faction || allowSelfAttack) {
+          if (
+            this.getChessBoard()[move[0]][move[1]].faction != piece.faction ||
+            allowSelfAttack
+          ) {
             possibleAttacksCoordinates.push(move);
           }
         }
@@ -446,6 +449,27 @@ export class MainService {
         }
       });
     }
+    if (attackPatterns.oneTileDiagonalForward) {
+      let direction = piece.faction == 'white' ? -1 : 1;
+      if (this.checkIfTherePiece([from[0] + direction, from[1] + 1])) {
+        if (
+          this.getCellOnChessBoard([from[0] + direction, from[1] + 1])
+            .faction != piece.faction ||
+          allowSelfAttack
+        ) {
+          possibleAttacksCoordinates.push([from[0] + direction, from[1] + 1]);
+        }
+      }
+      if (this.checkIfTherePiece([from[0] + direction, from[1] - 1])) {
+        if (
+          this.getCellOnChessBoard([from[0] + direction, from[1] - 1])
+            .faction != piece.faction ||
+          allowSelfAttack
+        ) {
+          possibleAttacksCoordinates.push([from[0] + direction, from[1] - 1]);
+        }
+      }
+    }
 
     return possibleAttacksCoordinates;
   }
@@ -474,6 +498,7 @@ export class MainService {
     if (piece.piece == 'Pawn') {
       pieceMovesPatterns.oneForward = true;
       pieceMovesPatterns.twoForward = true; // should be implemented better???
+      pieceAttacksPatterns.oneTileDiagonalForward = true;
     }
     if (piece.piece == 'Knight') {
       pieceMovesPatterns.LShape = true;

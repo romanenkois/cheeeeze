@@ -15,7 +15,7 @@ export class ChessBoardComponent {
 
   chessBoard: InputSignal<any> = input.required();
 
-  showIndexes: WritableSignal<boolean> = signal(false);
+  showIndexes: WritableSignal<boolean> = signal(true);
 
   firstPosition: [number, number] | undefined;
   secondPosition: [number, number] | undefined;
