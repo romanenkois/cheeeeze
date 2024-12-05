@@ -27,7 +27,7 @@ export class ChessFieldComponent {
   position: InputSignal<[number, number]> = input.required();
   field: InputSignal<chessField> = input.required();
   showIndex: InputSignal<boolean> = input.required();
-  onFocus: InputSignal<boolean> = input.required();
+  onFocus: InputSignal<'selected' | 'toBeAttacked' | 'toBeMoved' | null> = input.required();
 
   @Output() fieldSelectedEvent = new EventEmitter<[number, number]>();
   fieldSelected() {

@@ -15,10 +15,13 @@ export class ChessBoardComponent {
 
   chessBoard: InputSignal<any> = input.required();
 
-  showIndexes: WritableSignal<boolean> = signal(true);
+  showIndexes: WritableSignal<boolean> = signal(false);
 
   firstPosition: [number, number] | undefined;
   secondPosition: [number, number] | undefined;
+
+  possibleMoves: Array<[number, number]> = [];
+  possibleAttacks: Array<[number, number]> = [];
 
   movePiece(coordinates: [number, number]) {
     if (this.firstPosition) {
@@ -27,7 +30,6 @@ export class ChessBoardComponent {
         return;
       }
       this.secondPosition = coordinates;
-      // console.log('2', this.firstPosition, this.secondPosition);
 
       this.mainService.movePiece(this.firstPosition, this.secondPosition);
       this.firstPosition = undefined;
@@ -35,7 +37,8 @@ export class ChessBoardComponent {
     } else {
       if (this.mainService.checkIfTherePiece(coordinates)) {
         this.firstPosition = coordinates;
-        // console.log('1', this.firstPosition, this.secondPosition);
+        this
+
       }
     }
   }

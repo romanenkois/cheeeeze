@@ -3,7 +3,6 @@
     (click)="this.fieldSelected()"
     [class.white-cell]="this.fieldColor() == 'white'"
     [class.black-cell]="this.fieldColor() == 'black'"
-    [class.on-focus]="this.onFocus()"
 >
     <p *ngIf="this.showIndex()">
         {{ this.position()[0] }}
@@ -12,6 +11,7 @@
     <div class="picture" *ngIf="this.field().piece != 'empty'">
         <img
             [src]="this.piecePicture()"
+            [class.on-selection]="this.onFocus()"
             [alt]="
                 this.field().piece != 'empty'
                     ? this.field().piece + ' ' + this.field().faction
