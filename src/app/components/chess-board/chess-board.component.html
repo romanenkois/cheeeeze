@@ -10,7 +10,7 @@
                         this.firstPosition &&
                         rowIndex == this.firstPosition[0] &&
                         this.firstPosition &&
-                            columnIndex == this.firstPosition[1]
+                        columnIndex == this.firstPosition[1]
                     "
                 >
                     <app-chess-field
@@ -23,6 +23,7 @@
                                 ? 'selected'
                                 : null
                         "
+                        [onFocus]="this.checkRowFocus(rowIndex, columnIndex)"
                         [showIndex]="this.showIndexes()"
                         (fieldSelectedEvent)="movePiece($event)"
                     ></app-chess-field>

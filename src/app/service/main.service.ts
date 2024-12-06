@@ -42,7 +42,7 @@ export class MainService {
   public getPiecePossibleAttacks(
     coordinates: [number, number]
   ): Array<[number, number]> {
-    let pieceMovePattern = this.moveValidator.getPieceMovePatterns(
+    let pieceMovePattern = this.moveValidator.getPieceAttackPatterns(
       this.getChessBoard()[coordinates[0]][coordinates[1]]
     );
 
@@ -83,7 +83,7 @@ export class MainService {
 
     let firstPiece = chessBoard[from[0]][from[1]];
     let secondPiece = chessBoard[to[0]][to[1]];
-    console.log(firstPiece, secondPiece);
+    // console.log(firstPiece, secondPiece);
 
     if (!this.validateMove(from, to, 'classic')) {
       return;

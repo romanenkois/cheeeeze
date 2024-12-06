@@ -534,8 +534,8 @@ export class MoveValidators {
       false,
       chessBoard
     );
-    console.log(111, posibleMoves);
-    console.log(222, posibleAttacks);
+    // console.log(111, posibleMoves);
+    // console.log(222, posibleAttacks);
 
     let isValidMove = false;
     isValidMove =
