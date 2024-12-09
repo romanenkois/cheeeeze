@@ -10,6 +10,7 @@ import {
 import { ChessFieldComponent } from '../chess-field/chess-field.component';
 import { CommonModule } from '@angular/common';
 import { MainService } from '../../service/main.service';
+import { chessFaction } from '../../service/models';
 
 @Component({
   selector: 'app-chess-board',
@@ -22,6 +23,7 @@ export class ChessBoardComponent {
   mainService: MainService = inject(MainService);
 
   chessBoard: InputSignal<any> = input.required();
+  factionTurn = computed(()=> this.mainService.$factionTurn());
 
   showIndexes: WritableSignal<boolean> = signal(false);
 
@@ -29,7 +31,7 @@ export class ChessBoardComponent {
   secondPosition: [number, number] | undefined;
 
   possibleMoves: Array<[number, number]> | undefined;
-  possibleAttacks: any;
+  possibleAttacks: Array<[number, number]> | undefined;
 
   checkRowFocus(rowIndex: number, columnIndex: number) {
     if (this.possibleMoves != undefined) {
@@ -47,7 +49,7 @@ export class ChessBoardComponent {
         }
       );
       if (rowToBeAttacked) {
-        console.log('1', rowToBeAttacked);
+        // console.log('1', rowToBeAttacked);
         return 'toBeAttacked';
       }
     }

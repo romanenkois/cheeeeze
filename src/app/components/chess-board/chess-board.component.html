@@ -1,4 +1,7 @@
 <div class="wrapper">
+    <div>
+        <p>{{ this.factionTurn() }}</p>
+    </div>
     <table>
         @for (row of this.chessBoard(); track $index; let rowIndex = $index) {
         <tr>

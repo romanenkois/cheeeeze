@@ -1,6 +1,7 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { chessBoardDefault, chessBoardTesting } from './data';
 import { MoveValidators } from './move.validators';
+import { ChessBoard, chessFaction } from './models';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,16 @@ export class MainService {
   }
   public getCellOnChessBoard(coordinates: [number, number]) {
     return this.$chessBoard()[coordinates[0]][coordinates[1]];
+  }
+
+  public readonly $factionTurn: WritableSignal<chessFaction> = signal('white');
+  public changeTurn() {
+    this.$factionTurn.set(this.$factionTurn() == 'white' ? 'black' : 'white');
+  }
+
+  public readonly $gameIsActive: WritableSignal<boolean> = signal(true);
+  public endGame() {
+    this.$gameIsActive.set(false);
   }
 
   public checkIfTherePiece(coordinates: [number, number]): boolean {
@@ -57,11 +68,16 @@ export class MainService {
   validateMove(
     from: [number, number],
     to: [number, number],
-    ruleset: string
+    ruleset: string,
+    chessBoard: ChessBoard
   ): boolean {
-    let chessBoard = this.getChessBoard();
     let firstPiece = chessBoard[from[0]][from[1]];
     let secondPiece = chessBoard[to[0]][to[1]];
+    let allowSelfAttack: boolean = false;
+
+    const posibleChessBoard: ChessBoard = JSON.parse(JSON.stringify(chessBoard));
+    posibleChessBoard[to[0]][to[1]] = firstPiece;
+    posibleChessBoard[from[0]][from[1]] = { piece: 'empty', faction: 'neutral' };
 
     if (
       (firstPiece.piece == 'empty' ||
@@ -70,22 +86,33 @@ export class MainService {
     ) {
       return false;
     }
-
-    if (!this.moveValidator.validatePieceMove(from, to, chessBoard)) {
+    if (firstPiece.faction != this.$factionTurn() && ruleset == 'classic') {
       return false;
     }
+    if (
+      !this.moveValidator.validatePieceMove(from, to, allowSelfAttack, chessBoard) &&
+      ruleset == 'classic'
+    ) {
+      return false;
+    }
+    if (
+      this.moveValidator.checkIfThrereIsCheck(this.$factionTurn(), allowSelfAttack, posibleChessBoard)
+    ) {
+      return false;
+    }
+    console.log('check white', this.moveValidator.checkIfThrereIsCheck('white', allowSelfAttack, posibleChessBoard))
+    console.log('check black', this.moveValidator.checkIfThrereIsCheck('black', allowSelfAttack, posibleChessBoard))
 
     return true;
   }
 
   movePiece(from: [number, number], to: [number, number]) {
-    let chessBoard = this.getChessBoard();
+    const chessBoard = this.getChessBoard();
 
     let firstPiece = chessBoard[from[0]][from[1]];
     let secondPiece = chessBoard[to[0]][to[1]];
-    // console.log(firstPiece, secondPiece);
 
-    if (!this.validateMove(from, to, 'classic')) {
+    if (!this.validateMove(from, to, 'classic', chessBoard)) {
       return;
     }
 
@@ -96,5 +123,6 @@ export class MainService {
       faction: 'neutral',
     };
     this.setChessBoard(chessBoard);
+    this.changeTurn();
   }
 }

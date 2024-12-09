@@ -1,12 +1,3 @@
-export type chessPiece =
-  | 'empty'
-  | 'Pawn'
-  | 'Rook'
-  | 'Knight'
-  | 'Bishop'
-  | 'Queen'
-  | 'King';
-
 export type movesPatterns = {
   straight?: boolean,
   diagonaly?: boolean,
@@ -24,6 +15,15 @@ export type attackPatterns = {
   oneTileSquare?: boolean,
 }
 
+export type chessPiece =
+  | 'empty'
+  | 'Pawn'
+  | 'Rook'
+  | 'Knight'
+  | 'Bishop'
+  | 'Queen'
+  | 'King';
+
 export type chessFaction = 'white' | 'black' | 'neutral';
 
 export type chessField = {
@@ -31,23 +31,4 @@ export type chessField = {
   faction: chessFaction;
 };
 
-export type smolArrayOfEight = [
-  chessField,
-  chessField,
-  chessField,
-  chessField,
-  chessField,
-  chessField,
-  chessField,
-  chessField
-];
-export type ChessBoard = [
-  smolArrayOfEight,
-  smolArrayOfEight,
-  smolArrayOfEight,
-  smolArrayOfEight,
-  smolArrayOfEight,
-  smolArrayOfEight,
-  smolArrayOfEight,
-  smolArrayOfEight
-];
+export type ChessBoard = Array<Array<chessField>>;

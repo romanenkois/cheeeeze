@@ -1,4 +1,10 @@
-import { chessField, movesPatterns, attackPatterns } from './models';
+import {
+  chessField,
+  movesPatterns,
+  attackPatterns,
+  ChessBoard,
+  chessFaction,
+} from './models';
 import { Injectable } from '@angular/core';
 
 // Used to store different validation fucntions
@@ -6,7 +12,18 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class MoveValidators {
-  checkIfTherePiece(coordinates: [number, number], chessBoard: any): boolean {
+  checkIfTherePiece(
+    coordinates: [number, number],
+    chessBoard: ChessBoard
+  ): boolean {
+    if (
+      coordinates[0] < 0 ||
+      coordinates[1] < 0 ||
+      coordinates[0] >= chessBoard.length ||
+      coordinates[1] >= chessBoard[0].length
+    ) {
+      return false;
+    }
     if (
       chessBoard[coordinates[0]][coordinates[1]].piece &&
       chessBoard[coordinates[0]][coordinates[1]].piece != 'empty'
@@ -27,7 +44,7 @@ export class MoveValidators {
   getPieceAllValidMoves(
     from: [number, number],
     posibleMovesPatterns: movesPatterns,
-    chessBoard: Array<Array<chessField>>
+    chessBoard: ChessBoard
   ): Array<[number, number]> {
     let posibleMovesCoordinates: Array<[number, number]> = [];
     let piece = chessBoard[from[0]][from[1]];
@@ -115,7 +132,6 @@ export class MoveValidators {
       // to the bottom left diagonal
       if (from[0] + 1 < YLenth && from[1] > -1) {
         let startingPoint: [number, number] = [from[0] + 1, from[1] - 1];
-        console.log(startingPoint);
         while (
           startingPoint[0] < YLenth &&
           startingPoint[1] > -1 &&
@@ -212,7 +228,6 @@ export class MoveValidators {
       });
     }
 
-    // console.log(posibleMovesCoordinates);
     return posibleMovesCoordinates;
   }
 
@@ -220,7 +235,7 @@ export class MoveValidators {
     from: [number, number],
     attackPatterns: attackPatterns,
     allowSelfAttack: boolean,
-    chessBoard: Array<Array<chessField>>
+    chessBoard: ChessBoard
   ): Array<[number, number]> {
     let possibleAttacksCoordinates: Array<[number, number]> = [];
     let piece = chessBoard[from[0]][from[1]];
@@ -332,7 +347,6 @@ export class MoveValidators {
       // to the bottom left diagonal
       if (from[0] + 1 < YLenth && from[1] > -1) {
         let startingPoint: [number, number] = [from[0] + 1, from[1] - 1];
-        console.log(startingPoint);
         while (startingPoint[0] < YLenth && startingPoint[1] > -1) {
           if (this.checkIfTherePiece(startingPoint, chessBoard)) {
             if (
@@ -461,6 +475,66 @@ export class MoveValidators {
     return possibleAttacksCoordinates;
   }
 
+  getFactionAllPossibleAttacks(
+    faction: chessFaction,
+    allowSelfAttack: boolean,
+    chessBoard: ChessBoard
+  ): Array<[number, number]> {
+    let allFactionPossibleAttacks: Array<[number, number]> = [];
+
+    for (let i = 0; i < chessBoard.length; i++) {
+      for (let i2 = 0; i2 < chessBoard[i].length; i2++) {
+        if (chessBoard[i][i2].faction == faction) {
+          const pieceAttacks = this.getPieceAllValidAttacks(
+            [i, i2],
+            this.getPieceAttackPatterns(chessBoard[i][i2]),
+            allowSelfAttack,
+            chessBoard
+          );
+          pieceAttacks.forEach((attack: [number, number]) => {
+            if (
+              !allFactionPossibleAttacks.find(
+                (tempAttack: [number, number]) => tempAttack == attack
+              )
+            ) {
+              allFactionPossibleAttacks.push(attack);
+            }
+          });
+        }
+      }
+    }
+
+    return allFactionPossibleAttacks;
+  }
+
+  getFactionAllPossibleMoves(faction: chessFaction, chessBoard: ChessBoard): Array<[number, number]> {
+    let allFactionPossibleMoves: Array<[number, number]> = [];
+
+    for (let i = 0; i < chessBoard.length; i++) {
+      for (let i2 = 0; i2 < chessBoard[i].length; i2++) {
+        if (chessBoard[i][i2].faction == faction) {
+          const pieceMoves = this.getPieceAllValidMoves(
+            [i, i2],
+            this.getPieceMovePatterns(chessBoard[i][i2]),
+            chessBoard
+          );
+          pieceMoves.forEach((move: [number, number]) => {
+            if (
+              !allFactionPossibleMoves.find(
+                (tempMove: [number, number]) => tempMove == move
+              )
+            ) {
+              allFactionPossibleMoves.push(move);
+            }
+          });
+        }
+      }
+    }
+
+    return allFactionPossibleMoves;
+
+  }
+
   getPieceMovePatterns(piece: chessField) {
     let pieceMovesPatterns: movesPatterns = {};
 
@@ -517,7 +591,8 @@ export class MoveValidators {
   validatePieceMove(
     from: [number, number],
     to: [number, number],
-    chessBoard: Array<Array<chessField>>
+    allowSelfAttack: boolean,
+    chessBoard: ChessBoard
   ): boolean {
     let piece = chessBoard[from[0]][from[1]];
     let pieceMovesPatterns = this.getPieceMovePatterns(piece);
@@ -531,11 +606,9 @@ export class MoveValidators {
     let posibleAttacks = this.getPieceAllValidAttacks(
       from,
       pieceAttacksPatterns,
-      false,
+      allowSelfAttack,
       chessBoard
     );
-    // console.log(111, posibleMoves);
-    // console.log(222, posibleAttacks);
 
     let isValidMove = false;
     isValidMove =
@@ -553,4 +626,64 @@ export class MoveValidators {
 
     return isValidMove;
   }
+
+  findFactionKing(faction: chessFaction, chessBoard: ChessBoard) {
+    let kingPosition: [number, number] | false = false;
+    for (let i = 0; i < chessBoard.length; i++) {
+      for (let i2 = 0; i2 < chessBoard[i].length; i2++) {
+        if (
+          chessBoard[i][i2].faction == faction &&
+          chessBoard[i][i2].piece == 'King'
+        ) {
+          kingPosition = [i, i2];
+        }
+      }
+    }
+    return kingPosition ? kingPosition : false;
+  }
+
+  checkIfThrereIsCheck(faction: chessFaction, allowSelfAttack: boolean, chessBoard: ChessBoard): boolean {
+    let oposingFaction =
+      faction == 'white' ? 'black' : ('white' as chessFaction);
+    let kingPosition: [number, number] | false = this.findFactionKing(faction, chessBoard);
+
+    if (!kingPosition) {
+      return false;
+    } else {
+      let oposingFactionAttacks = this.getFactionAllPossibleAttacks(
+        oposingFaction,
+        allowSelfAttack,
+        chessBoard
+      );
+      for (let attack of oposingFactionAttacks) {
+        if (attack[0] == kingPosition[0] && attack[1] == kingPosition[1]) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+  // checkIfThereIsCheckMate(faction: chessFaction, allowSelfAttack: boolean, chessBoard: ChessBoard): boolean {
+  //   if (!this.checkIfThrereIsCheck(faction, allowSelfAttack, chessBoard)) {
+  //     return false;
+  //   }
+
+  //   let AllAllPosibleMoves = [];
+  //   AllAllPosibleMoves.push(...this.getFactionAllPossibleAttacks(faction, allowSelfAttack, chessBoard));
+  //   AllAllPosibleMoves.push(...this.getFactionAllPossibleMoves(faction, chessBoard));
+
+  //   AllAllPosibleMoves.forEach((move: [number, number]) => {
+  //     let possibleChessBoard: ChessBoard = JSON.parse(JSON.stringify(chessBoard));
+  //     possibleChessBoard[move[0]][move[1]] = ;
+  //     possibleChessBoard[move[0]][move[1]] = { piece: 'empty', faction: 'neutral' };
+
+  //     if () {
+
+  //     }
+
+  //   });
+
+  //   return false;
+  // }
 }
