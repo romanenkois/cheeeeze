@@ -75,9 +75,14 @@ export class MainService {
     let secondPiece = chessBoard[to[0]][to[1]];
     let allowSelfAttack: boolean = false;
 
-    const posibleChessBoard: ChessBoard = JSON.parse(JSON.stringify(chessBoard));
+    const posibleChessBoard: ChessBoard = JSON.parse(
+      JSON.stringify(chessBoard)
+    );
     posibleChessBoard[to[0]][to[1]] = firstPiece;
-    posibleChessBoard[from[0]][from[1]] = { piece: 'empty', faction: 'neutral' };
+    posibleChessBoard[from[0]][from[1]] = {
+      piece: 'empty',
+      faction: 'neutral',
+    };
 
     if (
       (firstPiece.piece == 'empty' ||
@@ -90,28 +95,55 @@ export class MainService {
       return false;
     }
     if (
-      !this.moveValidator.validatePieceMove(from, to, allowSelfAttack, chessBoard) &&
+      !this.moveValidator.validatePieceMove(
+        from,
+        to,
+        allowSelfAttack,
+        chessBoard
+      ) &&
       ruleset == 'classic'
     ) {
       return false;
     }
     if (
-      this.moveValidator.checkIfThrereIsCheck(this.$factionTurn(), allowSelfAttack, posibleChessBoard)
+      this.moveValidator.checkIfThrereIsCheck(
+        this.$factionTurn(),
+        allowSelfAttack,
+        posibleChessBoard
+      )
     ) {
       return false;
     }
-    console.log('check white', this.moveValidator.checkIfThrereIsCheck('white', allowSelfAttack, posibleChessBoard))
-    console.log('check black', this.moveValidator.checkIfThrereIsCheck('black', allowSelfAttack, posibleChessBoard))
+    console.log(
+      'check white',
+      this.moveValidator.checkIfThrereIsCheck(
+        'white',
+        allowSelfAttack,
+        posibleChessBoard
+      )
+    );
+    console.log(
+      'check black',
+      this.moveValidator.checkIfThrereIsCheck(
+        'black',
+        allowSelfAttack,
+        posibleChessBoard
+      )
+    );
 
     return true;
   }
 
   movePiece(from: [number, number], to: [number, number]) {
     const chessBoard = this.getChessBoard();
+    let allowSelfAttack: boolean = false;
 
     let firstPiece = chessBoard[from[0]][from[1]];
     let secondPiece = chessBoard[to[0]][to[1]];
 
+    if (this.$gameIsActive() == false) {
+      return;
+    }
     if (!this.validateMove(from, to, 'classic', chessBoard)) {
       return;
     }
@@ -123,6 +155,16 @@ export class MainService {
       faction: 'neutral',
     };
     this.setChessBoard(chessBoard);
+
     this.changeTurn();
+    if (
+      this.moveValidator.checkIfThereIsCheckMate(
+        this.$factionTurn(),
+        allowSelfAttack,
+        chessBoard
+      )
+    ) {
+      this.endGame();
+    }
   }
 }

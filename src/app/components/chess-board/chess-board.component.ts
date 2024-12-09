@@ -24,6 +24,7 @@ export class ChessBoardComponent {
 
   chessBoard: InputSignal<any> = input.required();
   factionTurn = computed(()=> this.mainService.$factionTurn());
+  gameStatus = computed(()=> this.mainService.$gameIsActive());
 
   showIndexes: WritableSignal<boolean> = signal(false);
 

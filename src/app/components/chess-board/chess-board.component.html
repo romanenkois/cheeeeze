@@ -1,6 +1,7 @@
 <div class="wrapper">
     <div>
         <p>{{ this.factionTurn() }}</p>
+        <p>{{ this.gameStatus() }}</p>
     </div>
     <table>
         @for (row of this.chessBoard(); track $index; let rowIndex = $index) {
