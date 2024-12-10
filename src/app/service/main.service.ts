@@ -65,7 +65,7 @@ export class MainService {
     );
   }
 
-  validateMove(
+  private validateMove(
     from: [number, number],
     to: [number, number],
     ruleset: string,
