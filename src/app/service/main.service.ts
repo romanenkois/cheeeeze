@@ -9,19 +9,20 @@ import { ChessBoard, chessFaction } from './models';
 export class MainService {
   private moveValidator: MoveValidators = inject(MoveValidators);
 
-  private readonly $chessBoard: WritableSignal<any> = signal(chessBoardDefault);
-  private setChessBoard(chessBoard: any) {
+  private readonly $chessBoard: WritableSignal<ChessBoard> =
+    signal(chessBoardDefault);
+  private setChessBoard(chessBoard: ChessBoard) {
     this.$chessBoard.set(chessBoard);
   }
-  public getChessBoard() {
+  public getChessBoard(): ChessBoard {
     return this.$chessBoard();
-  }
-  public getCellOnChessBoard(coordinates: [number, number]) {
-    return this.$chessBoard()[coordinates[0]][coordinates[1]];
   }
 
   public readonly $factionTurn: WritableSignal<chessFaction> = signal('white');
-  public changeTurn() {
+  public getTurn(): chessFaction {
+    return this.$factionTurn();
+  }
+  public changeTurn(faction: chessFaction) {
     this.$factionTurn.set(this.$factionTurn() == 'white' ? 'black' : 'white');
   }
 
@@ -156,7 +157,9 @@ export class MainService {
     };
     this.setChessBoard(chessBoard);
 
-    this.changeTurn();
+    this.getTurn() == 'white'
+      ? this.changeTurn('black')
+      : this.changeTurn('white');
     if (
       this.moveValidator.checkIfThereIsCheckMate(
         this.$factionTurn(),

@@ -4,6 +4,7 @@ import {
   effect,
   EventEmitter,
   inject,
+  Input,
   input,
   InputSignal,
   Output,
@@ -22,8 +23,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './chess-field.component.scss',
 })
 export class ChessFieldComponent {
-  mainService: MainService = inject(MainService);
-
   position: InputSignal<[number, number]> = input.required();
   field: InputSignal<chessField> = input.required();
   showIndex: InputSignal<boolean> = input.required();
