@@ -1,4 +1,4 @@
-import { ChessBoard } from './models';
+import { ChessBoard } from '@models/index';
 
 export const chessBoardDefault: ChessBoard = [
   [

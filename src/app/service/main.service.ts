@@ -1,5 +1,5 @@
 import { Injectable} from '@angular/core';
-import { ChessGame } from './chess.class';
+import { ChessGame } from '../shared/chess-engine/chess.class';
 
 @Injectable({
   providedIn: 'root',

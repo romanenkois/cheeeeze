@@ -1,7 +1,7 @@
 import { signal, WritableSignal } from '@angular/core';
 import { MoveValidators } from './move.validators';
 import { chessBoardDefault } from './data';
-import { ChessBoard, chessFaction } from './models';
+import { ChessBoard, chessFaction } from '@models/index';
 
 export class ChessGame {
   private moveValidator: MoveValidators =  new MoveValidators;

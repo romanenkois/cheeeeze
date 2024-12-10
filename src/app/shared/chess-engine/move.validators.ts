@@ -3,9 +3,8 @@ import {
   movesPatterns,
   attackPatterns,
   ChessBoard,
-  chessFaction,
-  chessPiece,
-} from './models';
+  chessFaction
+} from '@models/index';
 import { Injectable } from '@angular/core';
 
 // Used to store different validation fucntions

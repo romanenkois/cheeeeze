@@ -12,7 +12,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { MainService } from '../../service/main.service';
-import { chessFaction, chessField, chessPiece } from '../../service/models';
+import { chessFaction, chessField, chessPiece } from '../../shared/models/models';
 import { CommonModule } from '@angular/common';
 
 @Component({
