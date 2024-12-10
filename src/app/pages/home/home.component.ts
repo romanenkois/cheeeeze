@@ -14,7 +14,7 @@ export default class HomeComponent {
   // mainService: MainService = inject(MainService);
   mainService: MainService = new MainService;
 
-  chessBoard = computed(() => this.mainService.getChessBoard());
+  // chessBoard = computed(() => this.mainService.getChessBoard());
 
   // constructor() {
   //   console.log(this.mainService.getChessBoard());

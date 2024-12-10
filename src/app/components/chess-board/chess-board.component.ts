@@ -2,15 +2,12 @@ import {
   Component,
   computed,
   inject,
-  input,
-  InputSignal,
   signal,
   WritableSignal,
 } from '@angular/core';
 import { ChessFieldComponent } from '../chess-field/chess-field.component';
 import { CommonModule } from '@angular/common';
 import { MainService } from '../../service/main.service';
-import { chessFaction } from '../../service/models';
 
 @Component({
   selector: 'app-chess-board',
@@ -21,10 +18,11 @@ import { chessFaction } from '../../service/models';
 })
 export class ChessBoardComponent {
   mainService: MainService = inject(MainService);
+  chessGame = this.mainService.getChessGame('123');
 
-  chessBoard: InputSignal<any> = input.required();
-  factionTurn = computed(()=> this.mainService.$factionTurn());
-  gameStatus = computed(()=> this.mainService.$gameIsActive());
+  chessBoard = computed(() => this.chessGame.getChessBoard())
+  factionTurn = computed(() => this.chessGame.$factionTurn());
+  gameStatus = computed(() => this.chessGame.$gameIsActive());
 
   showIndexes: WritableSignal<boolean> = signal(false);
 
@@ -69,7 +67,7 @@ export class ChessBoardComponent {
       }
       this.secondPosition = coordinates;
 
-      this.mainService.movePiece(this.firstPosition, this.secondPosition);
+      this.chessGame.movePiece(this.firstPosition, this.secondPosition);
 
       this.firstPosition = undefined;
       this.secondPosition = undefined;
@@ -79,12 +77,12 @@ export class ChessBoardComponent {
 
     }
     // if none of piece is selected
-    else if (this.mainService.checkIfTherePiece(coordinates)) {
+    else if (this.chessGame.checkIfTherePiece(coordinates)) {
       this.firstPosition = coordinates;
-      this.possibleMoves = this.mainService.getPiecePossibleMoves(
+      this.possibleMoves = this.chessGame.getPiecePossibleMoves(
         this.firstPosition
       );
-      this.possibleAttacks = this.mainService.getPiecePossibleAttacks(
+      this.possibleAttacks = this.chessGame.getPiecePossibleAttacks(
         this.firstPosition
       );
     }
