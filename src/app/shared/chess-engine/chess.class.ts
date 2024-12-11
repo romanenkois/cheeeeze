@@ -22,7 +22,7 @@ export class ChessGame {
     return this.$factionTurn();
   }
 
-  private readonly userFaction: WritableSignal<chessFaction> = signal('white');
+  private readonly userFaction: WritableSignal<chessFaction> = signal('black');
   private setPlayerFaction(faction: chessFaction) {
     this.userFaction.set(faction);
   }

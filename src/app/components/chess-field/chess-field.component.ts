@@ -3,27 +3,26 @@ import {
   computed,
   effect,
   EventEmitter,
-  inject,
-  Input,
   input,
   InputSignal,
   Output,
   signal,
   WritableSignal,
 } from '@angular/core';
-import { MainService } from '../../service/main.service';
-import { chessFaction, chessField, chessPiece } from '../../shared/models/models';
+import { chessFaction, chessField, chessPiece } from '@models/index';
 import { CommonModule } from '@angular/common';
+import { NumberToLetter } from "@pipes/index";
 
 @Component({
   selector: 'app-chess-field',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NumberToLetter],
   templateUrl: './chess-field.component.html',
   styleUrl: './chess-field.component.scss',
 })
 export class ChessFieldComponent {
   position: InputSignal<[number, number]> = input.required();
+  positionToShow: InputSignal<[number, number]> = input.required();
   field: InputSignal<chessField> = input.required();
   showIndex: InputSignal<boolean> = input.required();
   onFocus: InputSignal<'selected' | 'toBeAttacked' | 'toBeMoved' | null> = input.required();

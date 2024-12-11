@@ -7,10 +7,10 @@
     [class.to-be-moved]="this.onFocus() == 'toBeMoved'"
     [class.to-be-attacked]="this.onFocus() == 'toBeAttacked'"
 >
-    <p *ngIf="this.showIndex()">
-        {{ this.position()[0] }}
-        {{ this.position()[1] }}
-    </p>
+    <div class="indexes" *ngIf="this.showIndex()">
+        <p>{{ this.positionToShow()[0] }}</p>
+        <p>{{ this.positionToShow()[1] | numberToLetter }}</p>
+    </div>
     <div class="picture">
         <img
             *ngIf="this.field().piece != 'empty'"

@@ -25,14 +25,8 @@
                 >
                     <app-chess-field
                         [position]="[rowIndex, columnIndex]"
+                        [positionToShow]="this.positionToShow([rowIndex, columnIndex])"
                         [field]="field"
-                        [onFocus]="
-                            this.firstPosition &&
-                            this.firstPosition[0] == rowIndex &&
-                            this.firstPosition[1] == columnIndex
-                                ? 'selected'
-                                : null
-                        "
                         [onFocus]="this.getRowFocusStatus(rowIndex, columnIndex)"
                         [showIndex]="this.showIndexes()"
                         (fieldSelectedEvent)="movePiece($event)"
