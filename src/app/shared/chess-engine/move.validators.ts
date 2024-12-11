@@ -157,7 +157,7 @@ export class MoveValidators {
       }
     }
     if (posibleMovesPatterns.oneForward) {
-      const direction = piece.faction == 'white' ? -1 : 1;
+      const direction = piece.faction == 'white' ? 1 : -1;
       const nextPosition: [number, number] = [from[0] + direction, from[1]];
 
       if (!this.checkIfTherePiece(nextPosition, chessBoard)) {
@@ -165,8 +165,7 @@ export class MoveValidators {
       }
     }
     if (posibleMovesPatterns.twoForward) {
-      const direction = piece.faction == 'white' ? -1 : 1;
-      const startRow = piece.faction == 'white' ? YLenth - 2 : 1;
+      const direction = piece.faction == 'white' ? 1 : -1;
       const nextPosition: [number, number] = [from[0] + direction, from[1]];
       const twoForwardPosition: [number, number] = [
         from[0] + 2 * direction,
@@ -174,7 +173,6 @@ export class MoveValidators {
       ];
 
       if (
-        from[0] == startRow &&
         !this.checkIfTherePiece(nextPosition, chessBoard) &&
         !this.checkIfTherePiece(twoForwardPosition, chessBoard)
       ) {
@@ -447,7 +445,7 @@ export class MoveValidators {
       });
     }
     if (attackPatterns.oneTileDiagonalForward) {
-      let direction = piece.faction == 'white' ? -1 : 1;
+      let direction = piece.faction == 'white' ? 1 : -1;
       if (
         this.checkIfTherePiece([from[0] + direction, from[1] + 1], chessBoard)
       ) {
@@ -546,13 +544,18 @@ export class MoveValidators {
     }
     if (piece.piece == 'Pawn') {
       pieceMovesPatterns.oneForward = true;
-      pieceMovesPatterns.twoForward = true; // should be implemented better???
+      if (!piece.hasMovedSinceGameBegin) {
+        pieceMovesPatterns.twoForward = true;
+      }
     }
     if (piece.piece == 'Knight') {
       pieceMovesPatterns.LShape = true;
     }
     if (piece.piece == 'King') {
       pieceMovesPatterns.oneTileSquare = true;
+      if (!piece.hasMovedSinceGameBegin) {
+        pieceMovesPatterns.castling = true;
+      }
     }
 
     return pieceMovesPatterns;

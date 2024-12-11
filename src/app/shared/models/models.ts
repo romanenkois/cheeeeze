@@ -5,6 +5,7 @@ export type movesPatterns = {
   oneForward?: boolean,
   LShape?: boolean,
   oneTileSquare?: boolean,
+  castling?: boolean,
 }
 
 export type attackPatterns = {
@@ -29,6 +30,8 @@ export type chessFaction = 'white' | 'black' | 'neutral';
 export type chessField = {
   piece: chessPiece;
   faction: chessFaction;
+  hasMovedSinceGameBegin?: boolean;
+  other?: {};
 };
 
 export type ChessBoard = Array<Array<chessField>>;

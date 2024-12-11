@@ -1,11 +1,16 @@
 <div class="wrapper">
     <div>
-        <p i18n> turn: {{ this.factionTurn() }}</p>
-        <p>{{ this.gameStatus() ? this.gameStatus() : 'no'  }}</p>
-        <p></p>
+        <p i18n>turn: {{ this.factionTurn() }}</p>
+        <p>{{ this.gameStatus() ? 'game is active' : 'game over!' }}</p>
+        <p>player: {{ this.playerFaction() }}</p>
+        <p>is flipped: {{this.flipBoard()}} </p>
     </div>
     <table>
-        @for (row of this.chessBoard(); track $index; let rowIndex = $index) {
+        @for (
+            row of this.chessBoard();
+            track $index;
+            let rowIndex = $index
+        ) {
         <tr>
             @for (field of row; track $index; let columnIndex = $index) {
             <td>
@@ -28,7 +33,7 @@
                                 ? 'selected'
                                 : null
                         "
-                        [onFocus]="this.checkRowFocus(rowIndex, columnIndex)"
+                        [onFocus]="this.getRowFocusStatus(rowIndex, columnIndex)"
                         [showIndex]="this.showIndexes()"
                         (fieldSelectedEvent)="movePiece($event)"
                     ></app-chess-field>

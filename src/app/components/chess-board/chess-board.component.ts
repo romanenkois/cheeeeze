@@ -20,9 +20,18 @@ export class ChessBoardComponent {
   mainService: MainService = inject(MainService);
   chessGame = this.mainService.getChessGame('123');
 
-  chessBoard = computed(() => this.chessGame.getChessBoard())
-  factionTurn = computed(() => this.chessGame.$factionTurn());
-  gameStatus = computed(() => this.chessGame.$gameIsActive());
+  playerFaction = computed(() => this.chessGame.getPlayerFaction());
+  flipBoard = computed(() => {
+    return this.playerFaction() == 'white' ? true : false
+  });
+  chessBoard = computed(() => {
+    if (this.flipBoard()) {
+      return this.chessGame.getChessBoard().reverse();
+    }
+    return this.chessGame.getChessBoard();
+  })
+  factionTurn = computed(() => this.chessGame.getTurn());
+  gameStatus = computed(() => this.chessGame.getGameStatus());
 
   showIndexes: WritableSignal<boolean> = signal(false);
 
@@ -32,7 +41,7 @@ export class ChessBoardComponent {
   possibleMoves: Array<[number, number]> | undefined;
   possibleAttacks: Array<[number, number]> | undefined;
 
-  checkRowFocus(rowIndex: number, columnIndex: number) {
+  getRowFocusStatus(rowIndex: number, columnIndex: number) {
     if (this.possibleMoves != undefined) {
       const rowToBeMoved = this.possibleMoves.find((move: [number, number]) => {
         return move[0] == rowIndex && move[1] == columnIndex;
@@ -85,6 +94,8 @@ export class ChessBoardComponent {
       this.possibleAttacks = this.chessGame.getPiecePossibleAttacks(
         this.firstPosition
       );
+      console.log('possibleMoves', this.possibleMoves);
+      console.log('possibleAttacks', this.possibleAttacks);
     }
   }
 }

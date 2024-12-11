@@ -6,8 +6,7 @@ import { ChessBoard, chessFaction } from '@models/index';
 export class ChessGame {
   private moveValidator: MoveValidators =  new MoveValidators;
 
-  private readonly $chessBoard: WritableSignal<ChessBoard> =
-    signal(chessBoardDefault);
+  private readonly $chessBoard: WritableSignal<ChessBoard> = signal(chessBoardDefault);
   private setChessBoard(chessBoard: ChessBoard) {
     this.$chessBoard.set(chessBoard);
   }
@@ -15,17 +14,28 @@ export class ChessGame {
     return this.$chessBoard();
   }
 
-  public readonly $factionTurn: WritableSignal<chessFaction> = signal('white');
+  private readonly $factionTurn: WritableSignal<chessFaction> = signal('white');
+  private changeTurn(faction: chessFaction) {
+    this.$factionTurn.set(this.$factionTurn() == 'white' ? 'black' : 'white');
+  }
   public getTurn(): chessFaction {
     return this.$factionTurn();
   }
-  public changeTurn(faction: chessFaction) {
-    this.$factionTurn.set(this.$factionTurn() == 'white' ? 'black' : 'white');
+
+  private readonly userFaction: WritableSignal<chessFaction> = signal('white');
+  private setPlayerFaction(faction: chessFaction) {
+    this.userFaction.set(faction);
+  }
+  public getPlayerFaction(): chessFaction {
+    return this.userFaction();
   }
 
-  public readonly $gameIsActive: WritableSignal<boolean> = signal(true);
-  public endGame() {
+  private readonly $gameIsActive: WritableSignal<boolean> = signal(true);
+  private endGame() {
     this.$gameIsActive.set(false);
+  }
+  public getGameStatus(): boolean {
+    return this.$gameIsActive();
   }
 
   public checkIfTherePiece(coordinates: [number, number]): boolean {
@@ -131,6 +141,8 @@ export class ChessGame {
 
     // if valid, move piece
     chessBoard[to[0]][to[1]] = firstPiece;
+    chessBoard[to[0]][to[1]].hasMovedSinceGameBegin = true;
+
     chessBoard[from[0]][from[1]] = {
       piece: 'empty',
       faction: 'neutral',
