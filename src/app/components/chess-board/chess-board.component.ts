@@ -22,7 +22,7 @@ export class ChessBoardComponent {
 
   playerFaction = computed(() => this.chessGame.getPlayerFaction());
   flipBoard = computed(() => {
-    return false;
+    // return true;
     return this.playerFaction() == 'white' ? true : false;
   });
   chessBoard = computed(() => this.chessGame.getChessBoard());
