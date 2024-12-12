@@ -21,10 +21,11 @@ import { NumberToLetter } from "@pipes/index";
   styleUrl: './chess-field.component.scss',
 })
 export class ChessFieldComponent {
+  field: InputSignal<chessField> = input.required();
   position: InputSignal<[number, number]> = input.required();
   positionToShow: InputSignal<[number, number]> = input.required();
-  field: InputSignal<chessField> = input.required();
   showIndex: InputSignal<boolean> = input.required();
+  showRealIndex: InputSignal<boolean> = input.required();
   onFocus: InputSignal<'selected' | 'toBeAttacked' | 'toBeMoved' | null> = input.required();
 
   @Output() fieldSelectedEvent = new EventEmitter<[number, number]>();
@@ -36,8 +37,8 @@ export class ChessFieldComponent {
   fieldColor = computed(() => {
     return (this.position()[1] % 2 == 0 && this.position()[0] % 2 == 0) ||
       (this.position()[1] % 2 != 0 && this.position()[0] % 2) != 0
-      ? 'white'
-      : 'black';
+      ? 'black'
+      : 'white';
   });
 
   getPieceImage(piece: chessPiece, faction: chessFaction, theme: 'standart') {

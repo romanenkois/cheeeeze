@@ -11,7 +11,7 @@ export class ChessGame {
     this.$chessBoard.set(chessBoard);
   }
   public getChessBoard(): ChessBoard {
-    return this.$chessBoard();
+    return JSON.parse(JSON.stringify(this.$chessBoard()));
   }
 
   private readonly $factionTurn: WritableSignal<chessFaction> = signal('white');
@@ -22,7 +22,7 @@ export class ChessGame {
     return this.$factionTurn();
   }
 
-  private readonly userFaction: WritableSignal<chessFaction> = signal('black');
+  private readonly userFaction: WritableSignal<chessFaction> = signal('white');
   private setPlayerFaction(faction: chessFaction) {
     this.userFaction.set(faction);
   }
@@ -47,6 +47,7 @@ export class ChessGame {
   public getPiecePossibleMoves(
     coordinates: [number, number]
   ): Array<[number, number]> {
+    console.log('gp_pm',coordinates);
     let pieceMovePattern = this.moveValidator.getPieceMovePatterns(
       this.getChessBoard()[coordinates[0]][coordinates[1]]
     );
@@ -61,6 +62,7 @@ export class ChessGame {
   public getPiecePossibleAttacks(
     coordinates: [number, number]
   ): Array<[number, number]> {
+    console.log('gp_pa',coordinates);
     let pieceMovePattern = this.moveValidator.getPieceAttackPatterns(
       this.getChessBoard()[coordinates[0]][coordinates[1]]
     );
@@ -92,14 +94,19 @@ export class ChessGame {
       faction: 'neutral',
     };
 
+    if (firstPiece.piece == 'empty') {
+      console.log('VALIDATION ERROR: ', 'cant move empty piece')
+      return false;
+    }
     if (
-      (firstPiece.piece == 'empty' ||
-        firstPiece.faction == secondPiece.faction) &&
+      firstPiece.faction == secondPiece.faction &&
       ruleset == 'classic'
     ) {
+      console.log('VALIDATION ERROR: ', 'both pieces are same faction')
       return false;
     }
     if (firstPiece.faction != this.$factionTurn() && ruleset == 'classic') {
+      console.log('VALIDATION ERROR: ', 'its turn of another faction')
       return false;
     }
     if (
@@ -111,6 +118,7 @@ export class ChessGame {
       ) &&
       ruleset == 'classic'
     ) {
+      console.log('VALIDATION ERROR: ', 'not valid piece movement pattern')
       return false;
     }
     if (
@@ -120,17 +128,21 @@ export class ChessGame {
         posibleChessBoard
       )
     ) {
+      console.log('VALIDATION ERROR: ', 'king under attack')
       return false;
     }
     return true;
   }
 
   movePiece(from: [number, number], to: [number, number]) {
+    console.log('MP', from, to);
     const chessBoard = this.getChessBoard();
     let allowSelfAttack: boolean = false;
 
     let firstPiece = chessBoard[from[0]][from[1]];
     let secondPiece = chessBoard[to[0]][to[1]];
+    console.log('first', firstPiece);
+    console.log('second', secondPiece);
 
     if (this.$gameIsActive() == false) {
       return;
@@ -161,5 +173,6 @@ export class ChessGame {
     ) {
       this.endGame();
     }
+    console.log("MOVED!!!!!!!!!")
   }
 }

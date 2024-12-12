@@ -7,7 +7,7 @@
     </div>
     <table>
         @for (
-            row of this.chessBoard();
+            row of this.chessBoardToShow();
             track $index;
             let rowIndex = $index
         ) {
@@ -24,11 +24,12 @@
                     "
                 >
                     <app-chess-field
-                        [position]="[rowIndex, columnIndex]"
-                        [positionToShow]="this.positionToShow([rowIndex, columnIndex])"
                         [field]="field"
-                        [onFocus]="this.getRowFocusStatus(rowIndex, columnIndex)"
+                        [position]="this.positionToPass([rowIndex, columnIndex])"
+                        [positionToShow]="this.positionToShow([rowIndex, columnIndex])"
                         [showIndex]="this.showIndexes()"
+                        [showRealIndex]="this.showRealIndexes()"
+                        [onFocus]="this.getRowFocusStatus([rowIndex, columnIndex])"
                         (fieldSelectedEvent)="movePiece($event)"
                     ></app-chess-field>
                 </div>
