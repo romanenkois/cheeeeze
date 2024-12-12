@@ -29,7 +29,7 @@
                         [positionToShow]="this.positionToShow([rowIndex, columnIndex])"
                         [showIndex]="this.showIndexes()"
                         [showRealIndex]="this.showRealIndexes()"
-                        [onFocus]="this.getRowFocusStatus([rowIndex, columnIndex])"
+                        [onFocus]="this.getRowFocusStatus(this.positionToPass([rowIndex, columnIndex]))"
                         (fieldSelectedEvent)="movePiece($event)"
                     ></app-chess-field>
                 </div>

@@ -1,6 +1,8 @@
-.wrapper {
-    $field-size: 70px;
+// $table-size: calc(100vw - 1rem);
+$table-size: calc(600px);
+$field-size: calc($table-size/10);
 
+.wrapper {
     table {
         tr {
             td {

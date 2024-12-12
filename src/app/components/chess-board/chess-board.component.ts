@@ -22,6 +22,7 @@ export class ChessBoardComponent {
 
   playerFaction = computed(() => this.chessGame.getPlayerFaction());
   flipBoard = computed(() => {
+    return false;
     return this.playerFaction() == 'white' ? true : false;
   });
   chessBoard = computed(() => this.chessGame.getChessBoard());
@@ -35,7 +36,7 @@ export class ChessBoardComponent {
   gameStatus = computed(() => this.chessGame.getGameStatus());
 
   showIndexes: WritableSignal<boolean> = signal(true);
-  showRealIndexes: WritableSignal<boolean> = signal(true);
+  showRealIndexes: WritableSignal<boolean> = signal(false);
 
   firstPosition: [number, number] | undefined | null;
   secondPosition: [number, number] | undefined;
@@ -43,6 +44,7 @@ export class ChessBoardComponent {
   possibleMoves: Array<[number, number]> | undefined;
   possibleAttacks: Array<[number, number]> | undefined;
 
+  // like, flips the indexes, so like REAL index of chessboard will be assigned to the field
   positionToPass(coordinates: [number, number]): [number, number] {
     if (this.flipBoard()) {
       return [
@@ -54,21 +56,40 @@ export class ChessBoardComponent {
     }
     return [coordinates[0], coordinates[1]];
   }
+
+  // flips only
   positionToShow(coordinates: [number, number]): [number, number] {
     if (this.flipBoard()) {
       return [(this.chessBoard().length - 1) - coordinates[0], coordinates[1]];
     }
-    return [coordinates[0], coordinates[1]];
+    return [
+      coordinates[0],
+      (this.chessBoard()[
+        (this.chessBoard().length - 1) - coordinates[0]
+      ].length -1) - coordinates[1]
+    ];
   }
 
   getRowFocusStatus(coordinates: [number, number]) {
+    //
+    let fp = this.firstPosition ? [this.firstPosition[0], this.firstPosition[1]] : null;
+    if (this.flipBoard()) {
+      fp = this.firstPosition
+        ? [
+          (this.chessBoard().length - 1) - this.firstPosition[0],
+          (this.chessBoard()[
+            (this.chessBoard().length - 1) - this.firstPosition[0]
+          ].length - 1 ) - this.firstPosition[1]
+        ]
+        : null;
+    }
     // if the piece on field is selected
     if (
-      this.firstPosition &&
-      this.firstPosition[0] == coordinates[0] &&
-      this.firstPosition[1] == coordinates[1]
+      fp &&
+      fp[0] == coordinates[0] &&
+      fp[1] == coordinates[1]
     ) {
-      // console.log('stat',coordinates)
+      console.log('stat',coordinates)
       return 'selected';
     }
     // if it is possible to move piece in here
@@ -120,11 +141,17 @@ export class ChessBoardComponent {
     // if none of piece is selected
     else if (this.chessGame.checkIfTherePiece(coordinates)) {
       this.firstPosition = this.positionToPass(coordinates);
+      // this.possibleMoves = this.chessGame.getPiecePossibleMoves(
+      //   this.positionToPass(coordinates)
+      // );
+      // this.possibleAttacks = this.chessGame.getPiecePossibleAttacks(
+      //   this.positionToPass(coordinates)
+      // );
       this.possibleMoves = this.chessGame.getPiecePossibleMoves(
-        this.positionToPass(coordinates)
+        coordinates
       );
       this.possibleAttacks = this.chessGame.getPiecePossibleAttacks(
-        this.positionToPass(coordinates)
+        coordinates
       );
       console.log('possibleMoves', this.possibleMoves);
       console.log('possibleAttacks', this.possibleAttacks);
