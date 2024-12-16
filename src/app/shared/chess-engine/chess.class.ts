@@ -1,12 +1,14 @@
 import { signal, WritableSignal } from '@angular/core';
 import { MoveValidators } from './move.validators';
-import { chessBoardDefault } from './data';
+import { chessBoardDefault, chessBoardTesting2 } from './data';
 import { ChessBoard, chessFaction } from '@models/index';
 
 export class ChessGame {
+  constructor(public id: string ) {}
+
   private moveValidator: MoveValidators =  new MoveValidators;
 
-  private readonly $chessBoard: WritableSignal<ChessBoard> = signal(chessBoardDefault);
+  private readonly $chessBoard: WritableSignal<ChessBoard> = signal(chessBoardTesting2);
   private setChessBoard(chessBoard: ChessBoard) {
     this.$chessBoard.set(chessBoard);
   }
@@ -22,7 +24,7 @@ export class ChessGame {
     return this.$factionTurn();
   }
 
-  private readonly userFaction: WritableSignal<chessFaction> = signal('white');
+  private readonly userFaction: WritableSignal<chessFaction> = signal('black');
   private setPlayerFaction(faction: chessFaction) {
     this.userFaction.set(faction);
   }
@@ -105,10 +107,10 @@ export class ChessGame {
       console.log('VALIDATION ERROR: ', 'both pieces are same faction')
       return false;
     }
-    if (firstPiece.faction != this.$factionTurn() && ruleset == 'classic') {
-      console.log('VALIDATION ERROR: ', 'its turn of another faction')
-      return false;
-    }
+    // if (firstPiece.faction != this.$factionTurn() && ruleset == 'classic') {
+    //   console.log('VALIDATION ERROR: ', 'its turn of another faction')
+    //   return false;
+    // }
     if (
       !this.moveValidator.validatePieceMove(
         from,

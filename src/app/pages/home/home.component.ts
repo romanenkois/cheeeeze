@@ -11,12 +11,6 @@ import { ChessBoardComponent } from "../../components/chess-board/chess-board.co
   styleUrl: './home.component.scss',
 })
 export default class HomeComponent {
-  // mainService: MainService = inject(MainService);
-  mainService: MainService = new MainService;
-
-  // chessBoard = computed(() => this.mainService.getChessBoard());
-
-  // constructor() {
-  //   console.log(this.mainService.getChessBoard());
-  // }
+  mainService: MainService = inject(MainService);
+  chessGame = this.mainService.getChessGame('123');
 }

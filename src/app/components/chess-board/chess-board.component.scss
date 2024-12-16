@@ -4,15 +4,20 @@ $field-size: calc($table-size/10);
 
 .wrapper {
     table {
-        tr {
+        background-color: rgba($color: #000000, $alpha: 0);
+        gap: 8px;
+        tr {gap: 8px;
             td {
+                gap: 8px;
                 width: $field-size;
                 height: $field-size;
                 max-width: $field-size;
                 max-height: $field-size;
-                background-color: var(--gray-color);
+
                 overflow: hidden;
                 box-sizing: border-box;
+
+                background-color: rgba($color: #000000, $alpha: 0);
 
                 .field {
                     width: $field-size;
@@ -22,23 +27,6 @@ $field-size: calc($table-size/10);
 
                     overflow: hidden;
                     box-sizing: border-box;
-
-                    transition: var(--quick-transition);
-                    background-color: var(--white-color);
-                }
-
-                .active-field {
-                    background-color: var(--accent-color);
-                }
-            }
-        }
-        tr:nth-child(even) {
-            td {
-                .field {
-                    background-color: var(--gray-color);
-                }
-                .active-field {
-                    background-color: var(--accent-color);
                 }
             }
         }

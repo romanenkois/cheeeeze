@@ -225,6 +225,42 @@ export class MoveValidators {
         }
       });
     }
+    if (posibleMovesPatterns.castling) {
+      if (!piece.hasMovedSinceGameBegin) {
+        console.log('111111111111')
+        // first we find the rook to the H
+        let shortRook: [number, number] | undefined;
+        for (let i = from[1]; i < XLenth; i++) {
+          if (
+            this.checkIfTherePiece([from[0], i], chessBoard) && (
+            chessBoard[from[0]][i].piece != 'Rook' ||
+            chessBoard[from[0]][i].faction != chessBoard[from[0]][from[1]].faction)
+          ) {
+            break;
+          }
+          if (
+            this.checkIfTherePiece([from[0], i], chessBoard) && (
+            chessBoard[from[0]][i].piece == 'Rook' ||
+            chessBoard[from[0]][i].faction == chessBoard[from[0]][from[1]].faction)
+          ) {
+            shortRook = [from[0], i];
+            break;
+          }
+        }
+        if (
+          // shortRook &&
+          !this.checkIfTherePiece([from[0], from[1] + 1], chessBoard)// &&
+          // !this.checkIfTherePiece([from[0], from[1] + 2], chessBoard)// &&
+          // !this.checkIfFieldUnderAttack(chessBoard[from[0]][from[1]].faction, [from[0], from[1]], chessBoard) &&
+          // !this.checkIfFieldUnderAttack(chessBoard[from[0]][from[1]].faction, [from[0], from[1] + 1], chessBoard) &&
+          // !this.checkIfFieldUnderAttack(chessBoard[from[0]][from[1]].faction, [from[0], from[1] + 2], chessBoard)
+        ) {
+          console.log('222222222222222222222')
+          posibleMovesCoordinates.push([from[0], from[1] + 2]);
+
+        }
+      }
+    }
 
     return posibleMovesCoordinates;
   }
@@ -639,6 +675,39 @@ export class MoveValidators {
       }
     }
     return kingPosition ? kingPosition : false;
+  }
+
+  checkIfFieldUnderAttack(
+    faction: chessFaction,
+    coordinates: [number, number],
+    chessBoard: ChessBoard
+  ): boolean {
+    let isUnderAttack: boolean = false;
+    let factionsToAttack: Array<chessFaction> = [];
+    // rewrite
+    faction == 'white' ? factionsToAttack.push('black') : factionsToAttack.push('white');
+
+    factionsToAttack.forEach((factionLoop: chessFaction) => {
+      if (factionLoop == 'neutral') {
+        // continue ??
+      }
+      let factionPossibleAttacks = this.getFactionAllPossibleAttacks(
+        factionLoop,
+        false,
+        chessBoard
+      )
+      factionPossibleAttacks.forEach((attack: any)=> {
+        let to = attack.to;
+        if (
+          attack.to[0] == coordinates[0] &&
+          attack.to[1] == coordinates[1]
+        ) {
+          isUnderAttack = true;
+        }
+      })
+    })
+
+    return isUnderAttack;
   }
 
   checkIfThrereIsCheck(

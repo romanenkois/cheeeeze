@@ -1,13 +1,13 @@
 import {
   Component,
   computed,
-  inject,
+  Input,
   signal,
   WritableSignal,
 } from '@angular/core';
 import { ChessFieldComponent } from '../chess-field/chess-field.component';
 import { CommonModule } from '@angular/common';
-import { MainService } from '../../service/main.service';
+import { ChessGame } from 'app/shared/chess-engine/chess.class';
 
 @Component({
   selector: 'app-chess-board',
@@ -17,12 +17,10 @@ import { MainService } from '../../service/main.service';
   styleUrl: './chess-board.component.scss',
 })
 export class ChessBoardComponent {
-  mainService: MainService = inject(MainService);
-  chessGame = this.mainService.getChessGame('123');
+  @Input() chessGame!: ChessGame;
 
   playerFaction = computed(() => this.chessGame.getPlayerFaction());
   flipBoard = computed(() => {
-    // return true;
     return this.playerFaction() == 'white' ? true : false;
   });
   chessBoard = computed(() => this.chessGame.getChessBoard());
@@ -36,7 +34,7 @@ export class ChessBoardComponent {
   gameStatus = computed(() => this.chessGame.getGameStatus());
 
   showIndexes: WritableSignal<boolean> = signal(true);
-  showRealIndexes: WritableSignal<boolean> = signal(false);
+  showRealIndexes: WritableSignal<boolean> = signal(true);
 
   firstPosition: [number, number] | undefined | null;
   secondPosition: [number, number] | undefined;
@@ -71,7 +69,6 @@ export class ChessBoardComponent {
   }
 
   getRowFocusStatus(coordinates: [number, number]) {
-    //
     let fp = this.firstPosition ? [this.firstPosition[0], this.firstPosition[1]] : null;
     if (this.flipBoard()) {
       fp = this.firstPosition
@@ -141,12 +138,6 @@ export class ChessBoardComponent {
     // if none of piece is selected
     else if (this.chessGame.checkIfTherePiece(coordinates)) {
       this.firstPosition = this.positionToPass(coordinates);
-      // this.possibleMoves = this.chessGame.getPiecePossibleMoves(
-      //   this.positionToPass(coordinates)
-      // );
-      // this.possibleAttacks = this.chessGame.getPiecePossibleAttacks(
-      //   this.positionToPass(coordinates)
-      // );
       this.possibleMoves = this.chessGame.getPiecePossibleMoves(
         coordinates
       );
