@@ -5,8 +5,12 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
+      "@services/*": ["app/shared/services/*"],
       "@models/*": ["app/shared/models/*"],
       "@pipes/*": ["app/shared/pipes/*"],
+      "@entities/*": ["app/entities/*"],
+      "@features/*": ["app/features/*"],
+      "@widgets/*": ["app/widgets/*"],
     },
     "outDir": "./dist/out-tsc",
     "strict": true,

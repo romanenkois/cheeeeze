@@ -5,7 +5,7 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { ChessFieldComponent } from '../chess-field/chess-field.component';
+import { ChessFieldComponent } from "@entities/chess-field/chess-field.component";
 import { CommonModule } from '@angular/common';
 import { ChessGame } from 'app/shared/chess-engine/chess.class';
 
