@@ -1,5 +1,5 @@
 import { signal, WritableSignal } from '@angular/core';
-import { MoveValidators } from './move.validators';
+import { MoveValidators } from './move-validator.class';
 import { chessBoardDefault, chessBoardTesting2 } from './data';
 import { ChessBoard, chessFaction } from '@models/index';
 
